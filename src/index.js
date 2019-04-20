@@ -1,9 +1,9 @@
-const express = require('express');
-const morgan = require('morgan');
+const express = require("express");
+const morgan = require("morgan");
 
-const router = require('./api');
-const { logger } = require('./utils/logger');
-const { errorHandler } = require('./middleware/error-handler');
+const router = require("./api");
+const { logger } = require("./utils/logger");
+const { errorHandler } = require("./middleware/error-handler");
 
 // Create a new express application instance
 const app = express();
