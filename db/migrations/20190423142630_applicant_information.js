@@ -53,6 +53,7 @@ exports.up = knex =>
 
 exports.down = knex =>
   knex.schema
+    // rollback in reverse order
     .dropTable("applicant_identifying_info")
-    .dropTable("applicants")
-    .dropTable("identifying_info");
+    .dropTable("identifying_info")
+    .dropTable("applicants");
