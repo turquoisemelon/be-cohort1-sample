@@ -26,20 +26,46 @@ $ docker-compose up
 $ yarn start
 ```
 
+## Database
+
+To create a new migration
+
+```sh
+$ npm run db:migrate:create -- <migration_name>
+```
+
+To run a migration
+
+```sh
+$ npm run db:migrate:latest
+```
+
+To rollback a migration
+
+```sh
+$ npm run db:migrate:rollback
+```
+
+To seed the database
+
+```sh
+$ npm run db:seed
+```
+
 ## Middleware
+
 Middleware functions are functions that have access to the request object (`req`), the response object (`res`), and the next middleware function in the application’s request-response cycle.
 
 Middleware can be at the application level or at the router level.
 
 ## Testing
+
 Using `jest` and `supertest` for API testing.
 
 ## Environment variables
+
 Environment variables are to be loaded in through a `.env` file. Anything that needs to be configured by environment or kept a secret should live in the `.env` file and it should never be checked in.
 
 ## Commit messages
-In order to keep a clean git history merges should always be squashed with a consistent commit message style.
 
-## TODOS
-- install knex + hook up to DB
--switch to forever instead of nodemon
+In order to keep a clean git history merges should always be squashed with a consistent commit message style.
