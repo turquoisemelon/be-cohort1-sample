@@ -19,11 +19,11 @@ exports.up = knex =>
         .references("id")
         .inTable("cohorts");
       table
-        .integer("applicant_id")
+        .integer("user_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("applicants");
+        .inTable("users");
       table
         .boolean("accepted_test")
         .notNullable()

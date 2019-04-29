@@ -25,11 +25,11 @@ exports.up = knex =>
     .createTable("responses", table => {
       table.increments();
       table
-        .integer("applicant_id")
+        .integer("user_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("applicants");
+        .inTable("users");
       table
         .integer("question_id")
         .unsigned()

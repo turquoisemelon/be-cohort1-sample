@@ -2,7 +2,7 @@ exports.up = knex =>
   knex.schema
 
     // create applicants table
-    .createTable("applicants", table => {
+    .createTable("users", table => {
       table.increments();
       table.string("first_name").notNullable();
       table.string("last_name").notNullable();
@@ -35,14 +35,14 @@ exports.up = knex =>
     })
 
     // create join table for applicants and identifying info (one applicant can have many piecent of identifying info)
-    .createTable("applicant_identifying_info", table => {
+    .createTable("user_identifying_info", table => {
       table.increments();
       table
-        .integer("applicant_id")
+        .integer("user_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("applicants");
+        .inTable("users");
       table
         .integer("identifying_info_id")
         .unsigned()
@@ -54,6 +54,6 @@ exports.up = knex =>
 exports.down = knex =>
   knex.schema
     // rollback in reverse order
-    .dropTable("applicant_identifying_info")
+    .dropTable("user_identifying_info")
     .dropTable("identifying_info")
-    .dropTable("applicants");
+    .dropTable("users");
