@@ -34,7 +34,8 @@ exports.seed = knex => {
     .del()
     .then(() => {
       // Inserts seed entries
-      return knex("identifying_info").returning("id").insert(identifying_info)
+      return knex("identifying_info").del().then(() => {
+        knex("identifying_info").returning("id").insert(identifying_info)
         .then((info_ids) => {
           return knex("users").returning('id').insert(createNUsers(20))
             .then((user_ids) => (
@@ -43,6 +44,7 @@ exports.seed = knex => {
                 identifying_info_id: faker.helpers.randomize(info_ids)
               })))
             ));
+        })
       })
     });
 };

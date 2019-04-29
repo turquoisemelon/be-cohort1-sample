@@ -19,15 +19,40 @@ const index = (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  database('users').where('id', req.params.id).then((users) => {
-    if (users.length > 0) {
-      return res.json(user[0]);
-    }
-    throw new NotFoundError('Unable to find user');
+  database.select('users.*', 'identifying_info.name as identifying_info')
+    .from('users')
+    .leftJoin('user_identifying_info', 'user_identifying_info.user_id', '=', 'users.id')
+    .leftJoin('identifying_info', 'user_identifying_info.identifying_info_id', '=', 'identifying_info.id')
+    .where('users.id', req.params.id)
+    .then((users) => {
+      if (users.length > 0) {
+        return res.json({ data: {
+          ...users[0],
+          identifying_info: users.map((u) => u.identifying_info)
+        }});
+      }
+      throw new NotFoundError('Unable to find user');
   }).catch((error) => next(error));
+}
+
+const create = (req, res, next) => {
+  database('users').insert(req.body.user, ['*']).then((user) => {
+    res.json(user)
+  }).catch((error) => next(error))
+}
+
+const update = (req, res, next) => {
+  database('users')
+    .where('id', req.params.id)
+    .update(req.body.user, ['*']).then((user) => {
+      res.json(user)
+    })
+  .catch((error) => next(error));
 }
 
 module.exports = {
   index,
-  get
+  get,
+  update,
+  create
 }
