@@ -1,3 +1,4 @@
+const { check, validationResult } = require('express-validator/check')
 const configuration = require('../../../knexfile')
 const database = require('knex')(configuration);
 
@@ -19,7 +20,7 @@ const index = (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  database.select('users.*', 'identifying_info.name as identifying_info')
+  return database.select('users.*', 'identifying_info.name as identifying_info')
     .from('users')
     .leftJoin('user_identifying_info', 'user_identifying_info.user_id', '=', 'users.id')
     .leftJoin('identifying_info', 'user_identifying_info.identifying_info_id', '=', 'identifying_info.id')
@@ -36,8 +37,12 @@ const get = (req, res, next) => {
 }
 
 const create = (req, res, next) => {
-  database('users').insert(req.body.user, ['*']).then((user) => {
-    res.json(user)
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  database('users').insert(req.body).returning('*').then((user) => {
+    res.json(user[0])
   }).catch((error) => next(error))
 }
 
