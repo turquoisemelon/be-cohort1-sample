@@ -22,7 +22,7 @@ router.post("", [
   check("last_name").isLength({ min: 2 }),
   check("pronouns").exists(),
   check("employment_status").isIn(["full_time", "part_time", "in_school", "looking", "not_looking"]),
-  check("employer")
+  check("identifying_info").isArray()
 ], usersController.create);
 
 router.get("/:id", usersController.get);
