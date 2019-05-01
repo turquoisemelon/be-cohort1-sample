@@ -12,7 +12,8 @@ class NotFoundError extends Error {
 
 const index = (req, res, next) => {
   User.query()
-    .then(users => users)
+    .eager("identifying_info")
+    .then(users => res.json({ data: users }))
     .catch(error => next(error));
 };
 
