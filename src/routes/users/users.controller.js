@@ -1,6 +1,7 @@
 const { check, validationResult } = require("express-validator/check");
 const database = require("../../db");
 const User = require("./users.model");
+const IdentifyingInfo = require("../identifyingInfo/identifyingInfo.model");
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -18,29 +19,13 @@ const index = (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  return database
-    .select("users.*", "identifying_info.name as identifying_info")
-    .from("users")
-    .leftJoin(
-      "user_identifying_info",
-      "user_identifying_info.user_id",
-      "=",
-      "users.id"
-    )
-    .leftJoin(
-      "identifying_info",
-      "user_identifying_info.identifying_info_id",
-      "=",
-      "identifying_info.id"
-    )
+  return User.query()
     .where("users.id", req.params.id)
+    .eager("identifying_info")
     .then(users => {
       if (users.length > 0) {
         return res.json({
-          data: {
-            ...users[0],
-            identifying_info: users.map(u => u.identifying_info)
-          }
+          data: users[0]
         });
       }
       throw new NotFoundError("Unable to find user");
@@ -53,33 +38,13 @@ const create = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-  const {
-    first_name,
-    last_name,
-    email,
-    employment_status,
-    employer,
-    pronouns
-  } = req.body;
-  return database("users")
-    .insert({
-      first_name,
-      last_name,
-      email,
-      employment_status,
-      employer,
-      pronouns
-    })
-    .returning("*")
-    .then(users => {
-      const [json] = users;
+  return User.insertUser(req.body)
+    .then(user => {
       const { identifying_info } = req.body;
-      json.identifying_info = identifying_info;
+      user.identifying_info = identifying_info;
       if (identifying_info.length) {
         const names = identifying_info.map(i => i.name);
-        return database("identifying_info")
-          .select()
-          .whereIn("name", identifying_info.map(i => i.name))
+        return IdentifyingInfo.getInfoWithNames(names)
           .then(existing_info => {
             if (existing_info.length === identifying_info.length) {
               return existing_info.map(i => i.id);
@@ -95,15 +60,15 @@ const create = (req, res, next) => {
             return database("user_identifying_info").insert(
               info_ids.map(id => ({
                 identifying_info_id: id,
-                user_id: users[0].id
+                user_id: user.id
               }))
             );
           })
           .then(() => {
-            return res.json(json);
+            return res.json(user);
           });
       }
-      return res.json(json);
+      return res.json(user);
     })
     .catch(error => next(error));
 };

@@ -1,6 +1,25 @@
 const { Model } = require("objection");
 
 class User extends Model {
+  static insertUser({
+    first_name,
+    last_name,
+    email,
+    employment_status,
+    employer,
+    pronouns
+  }) {
+    return User.query()
+      .insert({
+        first_name,
+        last_name,
+        email,
+        employment_status,
+        employer,
+        pronouns
+      })
+      .returning("*");
+  }
   static get tableName() {
     return "users";
   }
