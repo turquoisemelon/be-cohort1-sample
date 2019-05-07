@@ -38,6 +38,14 @@ class User extends Model {
           },
           to: "identifying_info.id"
         }
+      },
+      applications: {
+        relation: Model.HasManyRelation,
+        modelClass: require("../applications/applications.model"),
+        join: {
+          from: "users.id",
+          to: "applications.cohort_id"
+        }
       }
     };
   }
