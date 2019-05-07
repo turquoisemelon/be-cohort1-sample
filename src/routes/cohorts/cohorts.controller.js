@@ -1,4 +1,8 @@
-const { check, checkBody, validationResult } = require("express-validator/check");
+const {
+  check,
+  checkBody,
+  validationResult
+} = require("express-validator/check");
 const database = require("../../db");
 const Cohort = require("./cohorts.model");
 class NotFoundError extends Error {
@@ -18,45 +22,63 @@ const index = (req, res, next) => {
 
 const create = (req, res, next) => {
   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log("ERROR")
-      return res.status(422).json({ errors: errors.array() });
-    }
-    return Cohort.insertCohort(req.body)
-      .then(cohort => res.json(cohort))
-      .catch(error => next(error))
-}
+  if (!errors.isEmpty()) {
+    console.log("ERROR");
+    return res.status(422).json({ errors: errors.array() });
+  }
+  return Cohort.insertCohort(req.body)
+    .then(cohort => res.json(cohort))
+    .catch(error => next(error));
+};
 
 const get = (req, res, next) => {
   return Cohort.query()
     .where("cohorts.id", req.params.id)
     .then(cohorts => {
-      if(cohorts.length > 0) {
+      if (cohorts.length > 0) {
         return res.json({
           data: cohorts[0]
-        })
+        });
       }
       throw new NotFoundError("Unable to find cohort");
     })
-    .catch(error => next(error))
-}
+    .catch(error => next(error));
+};
 
 const update = (req, res, next) => {
   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log("ERROR")
-      return res.status(422).json({ errors: errors.array() });
-    }
-  console.log(req.params.id)
-  const id = req.params.id
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  const id = req.params.id;
   return Cohort.updateCohort(id, req.body)
     .then(cohort => res.json(cohort))
-    .catch(error => next(error))
-}
+    .catch(error => next(error));
+};
+
+const remove = async (req, res, next) => {
+  try {
+    await Cohort.deleteCohort(req.params.id);
+    res.json({ data: { id: req.params.id } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getCohortApplications = async (req, res, next) => {
+  try {
+    const applications = await Cohort.getCohortApplications(req.params.id);
+    res.json({ data: applications });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   index,
   get,
   update,
-  create
+  create,
+  remove,
+  getCohortApplications
 };
