@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { authenticateRequest } = require("./authentication");
+const { authorizeRequest } = require("./authorization");
 const { healthRouter } = require("../routes/health/health.router");
 const { usersRouter } = require("../routes/users/users.router");
 const { cohortsRouter } = require("../routes/cohorts/cohorts.router");
@@ -14,6 +15,7 @@ const router = express.Router();
 router.use("/health", healthRouter);
 
 router.use(authenticateRequest);
+router.use(authorizeRequest);
 
 //authenticated endpoints
 router.use("/users", usersRouter);

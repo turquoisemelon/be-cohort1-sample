@@ -16,11 +16,9 @@ const authenticateRequest = (req, res, next) => {
       return next(new UnauthorizedError("Missing Token"));
     }
 
-    const ascii = Buffer.from((token, "base64")).toString("ascii");
-
-    if (ascii.length !== 6) {
-      return next(new UnauthorizedError("Invalid Token"));
-    }
+    req.user = {
+      id: 1
+    };
 
     return next();
   } catch (error) {
@@ -29,5 +27,6 @@ const authenticateRequest = (req, res, next) => {
 };
 
 module.exports = {
-  authenticateRequest
+  authenticateRequest,
+  UnauthorizedError
 };

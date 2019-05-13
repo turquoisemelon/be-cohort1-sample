@@ -1,4 +1,7 @@
 const Application = require("../routes/applications/applications.model");
+const User = require("../routes/users/users.model");
+const Cohort = require("../routes/cohorts/cohorts.model");
+const { UnauthorizedError } = require("./authentication");
 
 const ROLES = {
   USER: "user",
@@ -51,7 +54,9 @@ const permissions = {
 
 const checkIfOwnResource = async (userId, resourceName, resourceId) => {
   const resourceToDbMap = {
-    [RESOURCES.APPLICATIONS]: Application
+    [RESOURCES.APPLICATIONS]: Application,
+    [RESOURCES.USERS]: User,
+    [RESOURCES.COHORTS]: Cohort
   };
 
   const record = await resourceToDbMap[resourceName]
@@ -71,23 +76,45 @@ const isAuthorized = async (user, resource, method) => {
     DELETE: "delete"
   };
   const action = methodActionMap[method];
-  const access = permissions[user.type][resource.name][action];
+  const access = permissions[user.role][resource.name][action];
 
   if (access === "all") return true;
 
-  if (access === "own") {
+  if (access === "own" && resource.id) {
     return await checkIfOwnResource(user.id, resource.name, resource.id);
   }
 
   return false;
 };
 
-const authorizeRequest = (req, res, next) => {
-  // const user = {
-  //   type: ROLES.USER,
-  //   id: 1
-  // };
-  // const resource = {
-  //   name: req.
-  // }
+const authorizeRequest = async (req, res, next) => {
+  const { user, path, method } = req;
+
+  const trimmedPath = path.split("/")[1];
+
+  if (!user) {
+    return next(new UnauthorizedError("Unauthorized"));
+  }
+
+  try {
+    const { role } = await User.query().findById(user.id);
+    req.user = Object.assign({}, req.user, { role });
+    const allowRequest = await isAuthorized(
+      req.user,
+      { name: trimmedPath, id: req.params.id },
+      method
+    );
+
+    if (!allowRequest) {
+      return next(new UnauthorizedError("Unauthorized"));
+    }
+    return next();
+  } catch (e) {
+    console.log(e);
+    return next(new UnauthorizedError());
+  }
+};
+
+module.exports = {
+  authorizeRequest
 };
