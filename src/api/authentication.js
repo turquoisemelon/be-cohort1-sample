@@ -1,3 +1,6 @@
+const jwt = require("express-jwt");
+const jwksRsa = require("jwks-rsa");
+
 class UnauthorizedError extends Error {
   constructor(message) {
     super(message);
@@ -7,14 +10,31 @@ class UnauthorizedError extends Error {
   }
 }
 
+const authenticateRequest = jwt({
+  // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://dev-kdbpfcpz.auth0.com/.well-known/jwks.json`
+  }),
+
+  // Validate the audience and the issuer.
+  // audience: "urn:my-resource-server",
+  issuer: "https://dev-kdbpfcpz.auth0.com/",
+  algorithms: ["RS256"]
+});
+
 // TODO: change to real auth!
-const authenticateRequest = (req, res, next) => {
+const mockAuthenticate = (req, res, next) => {
   try {
-    token = req.headers.authorization;
-    if (!token) {
+    header = req.headers.authorization;
+    if (!header) {
       console.log("no token");
       return next(new UnauthorizedError("Missing Token"));
     }
+
+    const [, token] = req.headers.authorization;
 
     req.user = {
       id: 1
@@ -27,6 +47,8 @@ const authenticateRequest = (req, res, next) => {
 };
 
 module.exports = {
+  mockAuthenticate,
   authenticateRequest,
+  setUser,
   UnauthorizedError
 };

@@ -89,6 +89,7 @@ const isAuthorized = async (user, resource, method) => {
 
 const authorizeRequest = async (req, res, next) => {
   const { user, path, method } = req;
+  console.log(user);
 
   const trimmedPath = path.split("/")[1];
 
