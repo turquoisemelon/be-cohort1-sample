@@ -15,7 +15,7 @@ const router = express.Router();
 router.use("/health", healthRouter);
 
 router.use(authenticateRequest);
-// router.use(authorizeRequest);
+router.use(authorizeRequest);
 
 //authenticated endpoints
 router.use("/users", usersRouter);

@@ -20,7 +20,7 @@ const authenticateRequest = jwt({
   }),
 
   // Validate the audience and the issuer.
-  // audience: "urn:my-resource-server",
+  audience: "applications-api",
   issuer: "https://dev-kdbpfcpz.auth0.com/",
   algorithms: ["RS256"]
 });
@@ -49,6 +49,5 @@ const mockAuthenticate = (req, res, next) => {
 module.exports = {
   mockAuthenticate,
   authenticateRequest,
-  setUser,
   UnauthorizedError
 };

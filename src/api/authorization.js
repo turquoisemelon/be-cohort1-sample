@@ -88,32 +88,23 @@ const isAuthorized = async (user, resource, method) => {
 };
 
 const authorizeRequest = async (req, res, next) => {
-  const { user, path, method } = req;
-  console.log(user);
-
-  const trimmedPath = path.split("/")[1];
+  const { user } = req;
 
   if (!user) {
     return next(new UnauthorizedError("Unauthorized"));
   }
 
-  try {
-    const { role } = await User.query().findById(user.id);
-    req.user = Object.assign({}, req.user, { role });
-    const allowRequest = await isAuthorized(
-      req.user,
-      { name: trimmedPath, id: req.params.id },
-      method
-    );
+  const userId = await User.query()
+    .where({ sub: user.sub })
+    .select("id")
+    .first();
 
-    if (!allowRequest) {
-      return next(new UnauthorizedError("Unauthorized"));
-    }
-    return next();
-  } catch (e) {
-    console.log(e);
-    return next(new UnauthorizedError());
+  if (!userId) {
+    return next(new UnauthorizedError("No user id match"));
   }
+
+  req.user.id = userId;
+  next();
 };
 
 module.exports = {

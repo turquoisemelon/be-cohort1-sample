@@ -2,12 +2,31 @@ const express = require("express");
 const { check, validationResult } = require("express-validator/check");
 const configuration = require("../../../knexfile");
 const database = require("knex")(configuration);
-
 const usersController = require("./users.controller");
+
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 403;
+    this.message = message;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
 const router = express.Router();
 
-router.get("", usersController.index);
+router.get(
+  "",
+  (req, res, next) => {
+    console.log(req.user.permissions);
+    if (req.user.permissions.includes("read:users")) {
+      next();
+    } else {
+      next(new UnauthorizedError("NO! YOU CANT! WHO DO YOU THINK YOU ARE"));
+    }
+  },
+  usersController.index
+);
 
 router.post(
   "",
