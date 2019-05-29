@@ -10,5 +10,8 @@ RUN yarn
 EXPOSE 8080
 
 COPY . /app
-RUN yarn run db:migrate:latest
-CMD [ "yarn", "start" ]
+
+COPY ./entrypoint.sh /
+RUN ["chmod", "+x", "/entrypoint.sh"]
+
+ENTRYPOINT [ "/entrypoint.sh" ]
