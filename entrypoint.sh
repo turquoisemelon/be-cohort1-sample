@@ -1,3 +1,4 @@
 #!/bin/bash
 
-yarn run db:migrate:latest && yarn start
+yarn run db:migrate:latest
+yarn start
