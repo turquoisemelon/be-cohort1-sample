@@ -8,7 +8,7 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
 
-EXPOSE 80
+EXPOSE 8080
 
 # Bundle app source
 COPY . /app
