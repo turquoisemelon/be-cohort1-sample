@@ -6,7 +6,7 @@ https://docs.docker.com/compose/install/
 Build the app and run it:
 
 ```sh
-$ yarn
+$ npm install
 $ docker-compose up --build
 ```
 
@@ -20,10 +20,17 @@ You should only have to build with docker compose the first time you install the
 $ docker-compose up
 ```
 
+## Run database migrations
+
+```sh
+$ npx knex migrate:latest
+$ npx knex seed:run
+```
+
 ## Run the app in production
 
 ```
-$ yarn start
+$ npm start
 ```
 
 ## Database
