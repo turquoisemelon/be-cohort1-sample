@@ -1,5 +1,5 @@
 const express = require("express");
-const { check, validationResult } = require("express-validator/check");
+const { check } = require("express-validator/check");
 const configuration = require("../../../knexfile");
 const database = require("knex")(configuration);
 const usersController = require("./users.controller");

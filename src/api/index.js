@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { mockAuthenticate, authenticateRequest } = require("./authentication");
+const { authenticateRequest } = require("./authentication");
 const { authorizeRequest } = require("./authorization");
 const { healthRouter } = require("../routes/health/health.router");
 const { usersRouter } = require("../routes/users/users.router");

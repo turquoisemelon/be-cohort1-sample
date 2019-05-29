@@ -3,8 +3,7 @@ const logger = require('../utils/logger').logger;
 const errorHandler = (
   err,
   req,
-  res,
-  next
+  res
 ) => {
   logger.error(err.message);
   if (process.env.NODE_ENV !== 'production') {

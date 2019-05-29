@@ -28,13 +28,13 @@ const authenticateRequest = jwt({
 // TODO: change to real auth!
 const mockAuthenticate = (req, res, next) => {
   try {
-    header = req.headers.authorization;
+    const header = req.headers.authorization;
     if (!header) {
       console.log("no token");
       return next(new UnauthorizedError("Missing Token"));
     }
 
-    const [, token] = req.headers.authorization;
+    // const [, token] = req.headers.authorization;
 
     req.user = {
       id: 1

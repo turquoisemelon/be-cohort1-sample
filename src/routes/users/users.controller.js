@@ -1,4 +1,4 @@
-const { check, validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator/check");
 const database = require("../../db");
 const User = require("./users.model");
 const IdentifyingInfo = require("../identifyingInfo/identifyingInfo.model");
@@ -73,7 +73,7 @@ const create = (req, res, next) => {
     .catch(error => next(error));
 };
 
-const update = (req, res, next) => {};
+const update = () => {};
 
 module.exports = {
   index,

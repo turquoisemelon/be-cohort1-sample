@@ -1,11 +1,7 @@
 const express = require("express");
 const {
   check,
-  checkBody,
-  validationResult
 } = require("express-validator/check");
-const configuration = require("../../../knexfile");
-const database = require("knex")(configuration);
 
 const cohortsController = require("./cohorts.controller");
 
@@ -14,7 +10,7 @@ const router = express.Router();
 router.get("", cohortsController.index);
 
 const isDate = value => {
-  d = Date.parse(value);
+  const d = Date.parse(value);
   return !isNaN(d);
 };
 

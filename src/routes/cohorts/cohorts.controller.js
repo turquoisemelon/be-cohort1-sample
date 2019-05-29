@@ -1,9 +1,6 @@
 const {
-  check,
-  checkBody,
   validationResult
 } = require("express-validator/check");
-const database = require("../../db");
 const Cohort = require("./cohorts.model");
 class NotFoundError extends Error {
   constructor(message) {
