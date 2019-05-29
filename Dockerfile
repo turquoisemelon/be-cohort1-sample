@@ -8,6 +8,8 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
 
+EXPOSE 8080
+
 # Bundle app source
 COPY . /app
 CMD [ "yarn", "start" ]

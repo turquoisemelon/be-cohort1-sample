@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -9,7 +10,7 @@ const { errorHandler } = require("./middleware/error-handler");
 // Create a new express application instance
 const app = express();
 // The port the express app will listen on
-const port = 3001;
+const port = process.env.PORT || 8080;
 
 logger.info("🤖 Initializing middleware");
 
