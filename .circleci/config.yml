@@ -5,6 +5,7 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+      - run: mkdir reports && mkdir reports/eslint
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
