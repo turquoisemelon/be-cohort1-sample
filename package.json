@@ -6,20 +6,15 @@
     "start": "node src/index.js",
     "test": "jest",
     "dev": "nodemon src/index.js",
-    "test:watch": "jest --watch",
-    "db:migrate:latest": "knex migrate:latest",
-    "db:migrate:rollback": "knex migrate:rollback",
-    "db:migrate:create": "knex migrate:make",
-    "db:seed": "knex seed:run"
+    "test:watch": "jest --watch"
   },
   "author": "",
   "devDependencies": {
-    "jest": "^22.4.4",
+    "jest": "^25.1.0",
     "nodemon": "^1.17.5"
   },
   "dependencies": {
     "express": "^4.16.3",
-    "knex": "^0.16.5",
     "morgan": "^1.9.0",
     "pg": "^7.10.0",
     "winston": "^3.0.0"
