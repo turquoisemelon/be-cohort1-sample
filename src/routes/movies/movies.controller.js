@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { promisify } = require("util");
+const { validationResult } = require("express-validator");
 
 const moviesData = require("../../../db/movies.data.json");
 
@@ -12,6 +13,10 @@ const listMovies = (req, res) => {
 };
 
 const postMovie = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   const id = moviesData.movies.length + 1;
   const newMoviesData = {
     genres: moviesData.genres,
