@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 
 const { listMovies, postMovie } = require("./movies.controller");
 const moviesData = require("../../../db/movies.data.json");
+const { validateBody } = require("../../middleware/validate-body");
 
 const router = express.Router();
 
@@ -33,6 +34,7 @@ router.post(
       .not()
       .isEmpty()
   ],
+  validateBody,
   postMovie
 );
 
