@@ -15,7 +15,7 @@ logger.info("🤖 Initializing middleware");
 
 app.use(morgan("tiny", { stream: logger.stream }));
 app.use("/", router);
-app.use(errorHandler);
+app.use(errorHandler); // you want your errorHandler to be the last thing that runs in your chain
 
 // Serve the application at the given port
 app.listen(port, () => {
