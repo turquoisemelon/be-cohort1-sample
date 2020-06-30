@@ -25,7 +25,34 @@ const postGroup = async (req, res) => {
   })
 }
 
+const updateGroup = async (req, res) => {
+  const groupId = groupsData.groups.length;
+
+  let groupToUpdate = groupsData.filter(group => group.id === groupId)
+
+  const updatedGroupsData = {
+    groups: [...groupsData.groups, { id, ...req.body }]
+  };
+}
+
+const deleteGroup = async (req, res) => {
+  const id = groupsData.groups.length;
+
+  const newGroupsData = {
+    groups: groupsData.groups.filter(group => group.id !== id)
+  }
+
+  await writeFile("src/db/data.json", JSON.stringify(newGroupsData));
+  res.status(200);
+
+  return res.json({
+    data: newGroupsData
+  })
+}
+
 module.exports = {
   listGroups,
-  postGroup
+  postGroup,
+  updateGroup,
+  deleteGroup
 }
